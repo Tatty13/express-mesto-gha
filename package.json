@@ -1,0 +1,24 @@
+{
+  "name": "express-mesto-gha",
+  "version": "1.0.0",
+  "description": "Backend for \"Mesto\" study project",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tatty13/express-mesto-gha.git"
+  },
+  "author": {
+    "name": "Tatiana Ivanova",
+    "email": "tat.mi.iva@gmail.com",
+    "url": "https://github.com/Tatty13"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tatty13/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/Tatty13/express-mesto-gha#readme"
+}
