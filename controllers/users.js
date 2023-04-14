@@ -6,6 +6,13 @@ function getUsers(req, res) {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err.message}` }));
 }
 
+function getUser(req, res) {
+  const { id } = req.params;
+  User.findById({ _id: id })
+    .then((user) => res.send(user))
+    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err.message}` }));
+}
+
 function createUser(req, res) {
   const { name, about, avatar } = req.body;
 
@@ -16,5 +23,6 @@ function createUser(req, res) {
 
 module.exports = {
   getUsers,
+  getUser,
   createUser,
 };
