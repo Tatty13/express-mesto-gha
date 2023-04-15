@@ -1,8 +1,8 @@
-class DataError extends Error {
+const CustomError = require('./custom-error');
+
+class DataError extends CustomError {
   constructor(message) {
-    super(message);
-    this.statusCode = 400;
-    this.name = 'DataError';
+    super(message, 400, 'DataError');
   }
 }
 
