@@ -1,9 +1,12 @@
 const Card = require('../models/card');
+const DataError = require('../errors/data-error');
+const NotFoundError = require('../errors/not-found-error');
+const { handleError } = require('../utils');
 
 function getCards(_, res) {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+    .catch((err) => handleError(res, err));
 }
 
 async function createCard(req, res) {
@@ -11,11 +14,13 @@ async function createCard(req, res) {
   const { _id } = req.user;
 
   try {
+    if (!(name && link)) throw new DataError('Данные не переданы или переданы не корректно');
+
     const newCard = await Card.create({ name, link, owner: _id });
     const card = await Card.findById(newCard._id).populate('owner').exec();
     res.send(card);
   } catch (err) {
-    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+    handleError(res, err);
   }
 }
 
@@ -24,11 +29,11 @@ async function deleteCard(req, res) {
 
   try {
     const card = await Card.findByIdAndRemove({ _id: id });
+    if (!card) throw new NotFoundError('Карточка не найдена');
 
-    if (!card) throw new Error('Карточка не найдена');
     res.send('Карточка успешно удалена');
   } catch (err) {
-    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+    handleError(res, err);
   }
 }
 
@@ -42,7 +47,7 @@ async function putLike(req, res) {
       { $addToSet: { likes: userId } },
     );
 
-    if (!updatedCard) throw new Error('Карточка не найдена');
+    if (!updatedCard) throw new NotFoundError('Карточка не найдена');
 
     const card = await Card
       .findById({ _id: id })
@@ -50,7 +55,7 @@ async function putLike(req, res) {
 
     res.send(card);
   } catch (err) {
-    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+    handleError(res, err);
   }
 }
 
@@ -63,7 +68,7 @@ async function deleteLike(req, res) {
       { $pull: { likes: userId } },
     );
 
-    if (!updatedCard) throw new Error('Карточка не найдена');
+    if (!updatedCard) throw new NotFoundError('Карточка не найдена');
 
     const card = await Card
       .findById({ _id: id })
@@ -71,7 +76,7 @@ async function deleteLike(req, res) {
 
     res.send(card);
   } catch (err) {
-    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+    handleError(res, err);
   }
 }
 
