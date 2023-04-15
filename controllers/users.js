@@ -28,7 +28,7 @@ async function createUser(req, res) {
   try {
     if (!(name && about && avatar)) throw new DataError();
 
-    const user = User.create({ name, about, avatar });
+    const user = await User.create({ name, about, avatar });
 
     res.send({ user });
   } catch (err) {
