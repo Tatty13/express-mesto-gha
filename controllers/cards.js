@@ -32,8 +32,53 @@ async function deleteCard(req, res) {
   }
 }
 
+async function putLike(req, res) {
+  const { id } = req.params;
+  const { _id: userId } = req.user;
+
+  try {
+    const updatedCard = await Card.findByIdAndUpdate(
+      id,
+      { $addToSet: { likes: userId } },
+    );
+
+    if (!updatedCard) throw new Error('Карточка не найдена');
+
+    const card = await Card
+      .findById({ _id: id })
+      .populate(['owner', 'likes']).exec();
+
+    res.send(card);
+  } catch (err) {
+    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+  }
+}
+
+async function deleteLike(req, res) {
+  const { id } = req.params;
+  const { _id: userId } = req.user;
+  try {
+    const updatedCard = await Card.findByIdAndUpdate(
+      id,
+      { $pull: { likes: userId } },
+    );
+
+    if (!updatedCard) throw new Error('Карточка не найдена');
+
+    const card = await Card
+      .findById({ _id: id })
+      .populate(['owner', 'likes']).exec();
+
+    res.send(card);
+  } catch (err) {
+    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+  }
+}
+
 module.exports = {
   getCards,
   createCard,
   deleteCard,
+  putLike,
+  deleteLike,
 };
