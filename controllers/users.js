@@ -1,24 +1,39 @@
 const User = require('../models/user');
+const DataError = require('../errors/data-error');
+const NotFoundError = require('../errors/not-found-error');
+const { handleError } = require('../utils');
 
-function getUsers(req, res) {
+function getUsers(_, res) {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err.message}` }));
+    .catch((err) => handleError(res, err));
 }
 
-function getUser(req, res) {
+async function getUser(req, res) {
   const { id } = req.params;
-  User.findById({ _id: id })
-    .then((user) => res.send(user))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err.message}` }));
+
+  try {
+    const user = await User.findById({ _id: id });
+    if (!user) throw new NotFoundError('Пользователь не найден');
+
+    res.send(user);
+  } catch (err) {
+    handleError(res, err);
+  }
 }
 
-function createUser(req, res) {
+async function createUser(req, res) {
   const { name, about, avatar } = req.body;
 
-  User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err.message}` }));
+  try {
+    if (!(name && about && avatar)) throw new DataError();
+
+    const user = User.create({ name, about, avatar });
+
+    res.send({ user });
+  } catch (err) {
+    handleError(res, err);
+  }
 }
 
 async function updateUser(req, res) {
@@ -26,15 +41,19 @@ async function updateUser(req, res) {
   const { _id } = req.user;
 
   try {
-    if (!(name || about)) throw new Error('Данные не переданы');
+    if (!(name || about)) throw new DataError();
+
     const user = await User.findByIdAndUpdate(
       _id,
       { name, about },
       { new: true, runValidators: true, upsert: true },
     );
+
+    if (!user) throw new NotFoundError('Пользователь не найден');
+
     res.send(user);
   } catch (err) {
-    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+    handleError(res, err);
   }
 }
 
@@ -43,15 +62,19 @@ async function updateAvatar(req, res) {
   const { _id } = req.user;
 
   try {
-    if (!avatar) throw new Error('Данные не переданы');
+    if (!avatar) throw new DataError();
+
     const user = await User.findByIdAndUpdate(
       _id,
       { avatar },
       { new: true, runValidators: true, upsert: true },
     );
+
+    if (!user) throw new NotFoundError('Пользователь не найден');
+
     res.send(user);
   } catch (err) {
-    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+    handleError(res, err);
   }
 }
 
