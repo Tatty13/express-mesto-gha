@@ -21,26 +21,38 @@ function createUser(req, res) {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err.message}` }));
 }
 
-function updateUser(req, res) {
+async function updateUser(req, res) {
   const { name, about } = req.body;
   const { _id } = req.user;
 
-  User.findByIdAndUpdate(
-    _id,
-    { name, about },
-    { new: true, runValidators: true, upsert: true },
-  )
-    .then((user) => res.send(user))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+  try {
+    if (!(name && about)) throw new Error('Данные не переданы');
+    const user = await User.findByIdAndUpdate(
+      _id,
+      { name, about },
+      { new: true, runValidators: true, upsert: true },
+    );
+    res.send(user);
+  } catch (err) {
+    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+  }
 }
 
-function updateAvatar(req, res) {
+async function updateAvatar(req, res) {
   const { avatar } = req.body;
   const { _id } = req.user;
 
-  User.findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true, upsert: true })
-    .then((user) => res.send(user))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+  try {
+    if (!avatar) throw new Error('Данные не переданы');
+    const user = await User.findByIdAndUpdate(
+      _id,
+      { avatar },
+      { new: true, runValidators: true, upsert: true },
+    );
+    res.send(user);
+  } catch (err) {
+    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+  }
 }
 
 module.exports = {
