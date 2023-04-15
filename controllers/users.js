@@ -26,7 +26,7 @@ async function updateUser(req, res) {
   const { _id } = req.user;
 
   try {
-    if (!(name && about)) throw new Error('Данные не переданы');
+    if (!(name || about)) throw new Error('Данные не переданы');
     const user = await User.findByIdAndUpdate(
       _id,
       { name, about },
