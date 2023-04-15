@@ -17,7 +17,7 @@ async function createCard(req, res) {
     if (!(name && link)) throw new DataError();
 
     const newCard = await Card.create({ name, link, owner: _id });
-    const card = await Card.findById(newCard._id).populate('owner').exec();
+    const card = await newCard.populate('owner');
     res.send(card);
   } catch (err) {
     handleError(res, err);
@@ -45,14 +45,12 @@ async function putLike(req, res) {
     const updatedCard = await Card.findByIdAndUpdate(
       id,
       { $addToSet: { likes: userId } },
+      { new: true, runValidators: true, upsert: true },
     );
 
     if (!updatedCard) throw new NotFoundError('Карточка не найдена');
 
-    const card = await Card
-      .findById({ _id: id })
-      .populate(['owner', 'likes']).exec();
-
+    const card = await updatedCard.populate(['owner', 'likes']);
     res.send(card);
   } catch (err) {
     handleError(res, err);
@@ -66,14 +64,12 @@ async function deleteLike(req, res) {
     const updatedCard = await Card.findByIdAndUpdate(
       id,
       { $pull: { likes: userId } },
+      { new: true, runValidators: true, upsert: true },
     );
 
     if (!updatedCard) throw new NotFoundError('Карточка не найдена');
 
-    const card = await Card
-      .findById({ _id: id })
-      .populate(['owner', 'likes']).exec();
-
+    const card = await updatedCard.populate(['owner', 'likes']);
     res.send(card);
   } catch (err) {
     handleError(res, err);
