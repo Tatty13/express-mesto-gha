@@ -6,21 +6,30 @@ function getCards(_, res) {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
 }
 
-function createCard(req, res) {
+async function createCard(req, res) {
   const { name, link } = req.body;
   const { _id } = req.user;
 
-  Card.create({ name, link, owner: _id })
-    .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+  try {
+    const newCard = await Card.create({ name, link, owner: _id });
+    const card = await Card.findById(newCard._id).populate('owner').exec();
+    res.send(card);
+  } catch (err) {
+    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+  }
 }
 
-function deleteCard(req, res) {
+async function deleteCard(req, res) {
   const { id } = req.params;
 
-  Card.findByIdAndRemove({ _id: id })
-    .then(() => res.send('Карточка успешно удалена'))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+  try {
+    const card = await Card.findByIdAndRemove({ _id: id });
+
+    if (!card) throw new Error('Карточка не найдена');
+    res.send('Карточка успешно удалена');
+  } catch (err) {
+    res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+  }
 }
 
 module.exports = {
