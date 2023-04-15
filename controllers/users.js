@@ -21,8 +21,32 @@ function createUser(req, res) {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err.message}` }));
 }
 
+function updateUser(req, res) {
+  const { name, about } = req.body;
+  const { _id } = req.user;
+
+  User.findByIdAndUpdate(
+    _id,
+    { name, about },
+    { new: true, runValidators: true, upsert: true },
+  )
+    .then((user) => res.send(user))
+    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+}
+
+function updateAvatar(req, res) {
+  const { avatar } = req.body;
+  const { _id } = req.user;
+
+  User.findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true, upsert: true })
+    .then((user) => res.send(user))
+    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+}
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
+  updateUser,
+  updateAvatar,
 };
