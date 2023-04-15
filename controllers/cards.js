@@ -31,7 +31,7 @@ async function deleteCard(req, res) {
     const card = await Card.findByIdAndRemove({ _id: id });
     if (!card) throw new NotFoundError('Карточка не найдена');
 
-    res.send('Карточка успешно удалена');
+    res.send(card);
   } catch (err) {
     handleError(res, err);
   }
