@@ -14,7 +14,7 @@ async function createCard(req, res) {
   const { _id } = req.user;
 
   try {
-    if (!(name && link)) throw new DataError('Данные не переданы или переданы не корректно');
+    if (!(name && link)) throw new DataError();
 
     const newCard = await Card.create({ name, link, owner: _id });
     const card = await Card.findById(newCard._id).populate('owner').exec();
