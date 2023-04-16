@@ -41,7 +41,7 @@ async function updateUser(req, res) {
     const user = await User.findByIdAndUpdate(
       _id,
       { name, about },
-      { new: true, runValidators: true, upsert: true },
+      { new: true, runValidators: true },
     );
 
     if (!user) throw new NotFoundError('Пользователь не найден');
@@ -60,7 +60,7 @@ async function updateAvatar(req, res) {
     const user = await User.findByIdAndUpdate(
       _id,
       { avatar },
-      { new: true, runValidators: true, upsert: true },
+      { new: true, runValidators: true },
     );
 
     if (!user) throw new NotFoundError('Пользователь не найден');
