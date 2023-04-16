@@ -45,7 +45,7 @@ async function putLike(req, res) {
     const updatedCard = await Card.findByIdAndUpdate(
       id,
       { $addToSet: { likes: userId } },
-      { new: true, runValidators: true },
+      { new: true },
     );
 
     if (!updatedCard) throw new NotFoundError('Карточка не найдена');
@@ -64,7 +64,7 @@ async function deleteLike(req, res) {
     const updatedCard = await Card.findByIdAndUpdate(
       id,
       { $pull: { likes: userId } },
-      { new: true, runValidators: true },
+      { new: true },
     );
 
     if (!updatedCard) throw new NotFoundError('Карточка не найдена');
