@@ -1,5 +1,4 @@
 const Card = require('../models/card');
-const DataError = require('../errors/data-error');
 const NotFoundError = require('../errors/not-found-error');
 const { handleError } = require('../utils');
 
@@ -14,8 +13,6 @@ async function createCard(req, res) {
   const { _id } = req.user;
 
   try {
-    if (!(name && link)) throw new DataError();
-
     const newCard = await Card.create({ name, link, owner: _id });
     const card = await newCard.populate('owner');
     res.send(card);

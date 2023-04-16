@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const DataError = require('../errors/data-error');
 const NotFoundError = require('../errors/not-found-error');
 const { handleError } = require('../utils');
 
@@ -26,8 +25,6 @@ async function createUser(req, res) {
   const { name, about, avatar } = req.body;
 
   try {
-    if (!(name && about && avatar)) throw new DataError();
-
     const user = await User.create({ name, about, avatar });
 
     res.send({ user });
@@ -41,8 +38,6 @@ async function updateUser(req, res) {
   const { _id } = req.user;
 
   try {
-    if (!(name || about)) throw new DataError();
-
     const user = await User.findByIdAndUpdate(
       _id,
       { name, about },
@@ -62,8 +57,6 @@ async function updateAvatar(req, res) {
   const { _id } = req.user;
 
   try {
-    if (!avatar) throw new DataError();
-
     const user = await User.findByIdAndUpdate(
       _id,
       { avatar },
