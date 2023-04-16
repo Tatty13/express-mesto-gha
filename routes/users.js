@@ -9,6 +9,4 @@ usersRouter.post('/', createUser);
 usersRouter.patch('/me', updateUser);
 usersRouter.patch('/me/avatar', updateAvatar);
 
-module.exports = {
-  usersRouter,
-};
+module.exports = usersRouter;
