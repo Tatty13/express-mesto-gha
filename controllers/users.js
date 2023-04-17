@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const { handleError } = require('../utils');
+const { CREATED_201 } = require('../utils/constants');
 
 function getUsers(_, res) {
   User.find({})
@@ -27,7 +28,7 @@ async function createUser(req, res) {
   try {
     const user = await User.create({ name, about, avatar });
 
-    res.send({ user });
+    res.status(CREATED_201).send({ user });
   } catch (err) {
     handleError(res, err);
   }

@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-error');
 const { handleError } = require('../utils');
+const { CREATED_201 } = require('../utils/constants');
 
 async function getCards(_, res) {
   try {
@@ -18,7 +19,7 @@ async function createCard(req, res) {
   try {
     const newCard = await Card.create({ name, link, owner: _id });
     const card = await newCard.populate('owner');
-    res.send(card);
+    res.status(CREATED_201).send(card);
   } catch (err) {
     handleError(res, err);
   }
