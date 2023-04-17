@@ -1,3 +1,4 @@
+const mongooseError = require('mongoose').Error;
 const CustomError = require('../errors/custom-error');
 const {
   BAD_REQUEST_400,
@@ -13,7 +14,7 @@ const {
 function handleError(res, err, errDesc = 'Произошла ошибка') {
   const resData = { message: `${errDesc}: ${err.message}` };
 
-  if (err.name === 'ValidationError' || err.name === 'CastError') {
+  if (err instanceof mongooseError.ValidationError || err instanceof mongooseError.CastError) {
     res.status(BAD_REQUEST_400).send(resData);
     return;
   }
