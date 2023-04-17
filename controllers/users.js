@@ -34,14 +34,17 @@ async function createUser(req, res) {
   }
 }
 
-async function updateUser(req, res) {
-  const { name, about } = req.body;
+/**
+ * @param {Object} req - Request
+ * @param {Object} res - Responce
+ * @param {Object} userInfo - user info to be updated
+ */
+async function updateUserInfo(req, res, userInfo) {
   const { _id } = req.user;
-
   try {
     const user = await User.findByIdAndUpdate(
       _id,
-      { name, about },
+      userInfo,
       { new: true, runValidators: true },
     );
 
@@ -53,23 +56,14 @@ async function updateUser(req, res) {
   }
 }
 
-async function updateAvatar(req, res) {
+function updateUser(req, res) {
+  const { name, about } = req.body;
+  updateUserInfo(req, res, { name, about });
+}
+
+function updateAvatar(req, res) {
   const { avatar } = req.body;
-  const { _id } = req.user;
-
-  try {
-    const user = await User.findByIdAndUpdate(
-      _id,
-      { avatar },
-      { new: true, runValidators: true },
-    );
-
-    if (!user) throw new NotFoundError('Пользователь не найден');
-
-    res.send(user);
-  } catch (err) {
-    handleError(res, err);
-  }
+  updateUserInfo(req, res, { avatar });
 }
 
 module.exports = {
