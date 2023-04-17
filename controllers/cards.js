@@ -42,14 +42,15 @@ async function deleteCard(req, res) {
   }
 }
 
-async function putLike(req, res) {
+// не уверена, что стоит выносить код снятия/постановки лайка в отдельную функцию
+async function toogleLike(req, res) {
   const { id } = req.params;
   const { _id: userId } = req.user;
 
   try {
     const card = await Card.findByIdAndUpdate(
       id,
-      { $addToSet: { likes: userId } },
+      req.method === 'PUT' ? { $addToSet: { likes: userId } } : { $pull: { likes: userId } },
       { new: true },
     ).populate(['owner', 'likes']);
 
@@ -61,22 +62,12 @@ async function putLike(req, res) {
   }
 }
 
-async function deleteLike(req, res) {
-  const { id } = req.params;
-  const { _id: userId } = req.user;
-  try {
-    const card = await Card.findByIdAndUpdate(
-      id,
-      { $pull: { likes: userId } },
-      { new: true },
-    ).populate(['owner', 'likes']);
+function putLike(req, res) {
+  toogleLike(req, res);
+}
 
-    if (!card) throw new NotFoundError('Карточка не найдена');
-
-    res.send(card);
-  } catch (err) {
-    handleError(res, err);
-  }
+function deleteLike(req, res) {
+  toogleLike(req, res);
 }
 
 module.exports = {
