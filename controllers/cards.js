@@ -29,7 +29,7 @@ async function deleteCard(req, res) {
   const { id } = req.params;
 
   try {
-    const card = await Card.findByIdAndRemove({ _id: id }).populate([
+    const card = await Card.findByIdAndRemove(id).populate([
       'owner',
       'likes',
     ]);
