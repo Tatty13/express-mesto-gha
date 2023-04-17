@@ -1,12 +1,12 @@
 const CustomError = require('./custom-error');
-const { HTTP_STATUS_NOT_FOUND } = require('../utils/constants');
+const { NOT_FOUND_404 } = require('../utils/constants');
 
 class NotFoundError extends CustomError {
   /**
    * @param {String} message - error message
    */
   constructor(message) {
-    super(message, HTTP_STATUS_NOT_FOUND, 'NotFoundError');
+    super(message, NOT_FOUND_404, 'NotFoundError');
   }
 }
 
