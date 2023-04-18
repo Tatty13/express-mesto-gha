@@ -12,13 +12,21 @@ const {
  * @returns
  */
 function handleError(res, err, errDesc = 'Произошла ошибка') {
-  const resData = { message: `${errDesc}: ${err.message}` };
-
-  if (err instanceof mongooseError.ValidationError || err instanceof mongooseError.CastError) {
+  if (err instanceof mongooseError.ValidationError) {
+    const errMessage = Object.values(err.errors).map((e) => e.message).join('. ');
+    const resData = { message: `${errDesc}: ${errMessage}` };
     res.status(BAD_REQUEST_400).send(resData);
     return;
   }
 
+  if (err instanceof mongooseError.CastError) {
+    const errMessage = `"${err.value}" incorrect. ${err.reason.message}`;
+    const resData = { message: errMessage };
+    res.status(BAD_REQUEST_400).send(resData);
+    return;
+  }
+
+  const resData = { message: `${errDesc}: ${err.message}` };
   if (err instanceof CustomError) {
     res.status(err.statusCode).send(resData);
   } else {
