@@ -30,6 +30,7 @@ function handleError(res, err, errDesc = 'Произошла ошибка') {
 
   if (err.code === 11000) {
     res.status(CONFLICT_409).send({ message: 'Пользователь с указанным email уже существует' });
+    return;
   }
 
   const resData = { message: `${errDesc}: ${err.message}` };
