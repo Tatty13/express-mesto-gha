@@ -1,5 +1,8 @@
+const validator = require('validator');
+
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
+const ValidationError = require('../errors/validation-error');
 const { handleError } = require('../utils');
 const { CREATED_201 } = require('../utils/constants');
 
@@ -23,10 +26,12 @@ async function getUser(req, res) {
 }
 
 async function createUser(req, res) {
-  const { name, about, avatar } = req.body;
+  const { email } = req.body;
 
   try {
-    const user = await User.create({ name, about, avatar });
+    if (!validator.isEmail(email)) throw new ValidationError('Некорректный email или пароль');
+
+    const user = await User.create(req.body);
 
     res.status(CREATED_201).send({ user });
   } catch (err) {
