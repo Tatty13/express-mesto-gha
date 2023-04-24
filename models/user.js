@@ -17,6 +17,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Аватар пользователя не получен'],
   },
+  email: {
+    type: String,
+    required: [true, 'email не указан'],
+    unique: [true, 'Пользователь с указанным email уже существует'],
+  },
+  password: {
+    type: String,
+    required: [true, 'Пароль не указан'],
+    minlength: [6, 'Длина пароля не должна быть короче 6 символов'],
+  },
 });
 
 module.exports = mongoose.model('user', userSchema);
