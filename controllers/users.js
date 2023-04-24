@@ -1,4 +1,5 @@
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
@@ -26,12 +27,13 @@ async function getUser(req, res) {
 }
 
 async function createUser(req, res) {
-  const { email } = req.body;
+  const { email, password } = req.body;
 
   try {
     if (!validator.isEmail(email)) throw new ValidationError('Некорректный email или пароль');
 
-    const user = await User.create(req.body);
+    const hash = await bcrypt.hash(password, 10);
+    const user = await User.create({ ...req.body, password: hash });
 
     res.status(CREATED_201).send({ user });
   } catch (err) {
