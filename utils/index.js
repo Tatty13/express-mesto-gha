@@ -3,6 +3,7 @@ const mongooseError = require('mongoose').Error;
 const CustomError = require('../errors/custom-error');
 const {
   BAD_REQUEST_400,
+  CONFLICT_409,
   INTERNAL_SERVER_ERROR_500,
 } = require('./constants');
 
@@ -28,7 +29,7 @@ function handleError(res, err, errDesc = 'Произошла ошибка') {
   }
 
   if (err.code === 11000) {
-    res.status(BAD_REQUEST_400).send({ message: 'Пользователь с указанным email уже существует' });
+    res.status(CONFLICT_409).send({ message: 'Пользователь с указанным email уже существует' });
   }
 
   const resData = { message: `${errDesc}: ${err.message}` };
