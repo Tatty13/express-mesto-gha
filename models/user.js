@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { findUserByCredentials } = require('../utils');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -28,5 +29,7 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'Длина пароля не должна быть короче 6 символов'],
   },
 });
+
+userSchema.statics = { findUserByCredentials };
 
 module.exports = mongoose.model('user', userSchema);
