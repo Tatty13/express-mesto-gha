@@ -1,6 +1,9 @@
 const mongooseError = require('mongoose').Error;
+const bcrypt = require('bcryptjs');
 
 const CustomError = require('../errors/custom-error');
+const AuthError = require('../errors/auth-error');
+
 const {
   BAD_REQUEST_400,
   CONFLICT_409,
@@ -41,6 +44,21 @@ function handleError(res, err, errDesc = 'Произошла ошибка') {
   }
 }
 
+/**
+ * @param {String} email
+ * @param {String} password
+ */
+async function findUserByCredentials(email, password) {
+  const user = await this.findOne({ email });
+  if (!user) throw new AuthError('Неправильные почта или пароль');
+
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
+  if (!isPasswordCorrect) throw new AuthError('Неправильные почта или пароль');
+
+  return user;
+}
+
 module.exports = {
   handleError,
+  findUserByCredentials,
 };
