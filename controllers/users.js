@@ -1,9 +1,12 @@
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+
 const NotFoundError = require('../errors/not-found-error');
 const ValidationError = require('../errors/validation-error');
+
 const { handleError } = require('../utils');
 const { CREATED_201 } = require('../utils/constants');
 
@@ -30,7 +33,7 @@ async function createUser(req, res) {
   const { email, password } = req.body;
 
   try {
-    if (!validator.isEmail(email)) throw new ValidationError('Некорректный email или пароль');
+    if (!validator.isEmail(email)) { throw new ValidationError('Некорректный email или пароль'); }
 
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({ ...req.body, password: hash });
@@ -73,10 +76,24 @@ function updateAvatar(req, res) {
   updateUserInfo(req, res, { avatar });
 }
 
+async function login(req, res) {
+  const { email, password } = req.body;
+  try {
+    const { _id } = await User.findUserByCredentials(email, password);
+
+    const token = jwt.sign({ _id }, 'secret-code', { expiresIn: '7d' });
+
+    res.send(token);
+  } catch (err) {
+    handleError(res, err);
+  }
+}
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   updateAvatar,
+  login,
 };
