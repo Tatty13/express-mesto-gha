@@ -2,6 +2,8 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const { JWT_SECRET } = process.env;
+
 const User = require('../models/user');
 
 const NotFoundError = require('../errors/not-found-error');
@@ -81,7 +83,7 @@ async function login(req, res) {
   try {
     const { _id } = await User.findUserByCredentials(email, password);
 
-    const token = jwt.sign({ _id }, 'secret-code', { expiresIn: '7d' });
+    const token = jwt.sign({ _id }, JWT_SECRET, { expiresIn: '7d' });
 
     res.send(token);
   } catch (err) {
