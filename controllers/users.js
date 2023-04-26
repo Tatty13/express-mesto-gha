@@ -15,7 +15,7 @@ const { CREATED_201 } = require('../utils/constants');
 function getUsers(_, res) {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => handleError(res, err));
+    .catch((err) => handleError(err, res));
 }
 
 async function getUserById(req, res) {
@@ -27,7 +27,7 @@ async function getUserById(req, res) {
 
     res.send(user);
   } catch (err) {
-    handleError(res, err);
+    handleError(err, res);
   }
 }
 
@@ -42,7 +42,7 @@ async function createUser(req, res) {
 
     res.status(CREATED_201).send({ user });
   } catch (err) {
-    handleError(res, err);
+    handleError(err, res);
   }
 }
 
@@ -64,7 +64,7 @@ async function updateUserInfo(req, res, userInfo) {
 
     res.send(user);
   } catch (err) {
-    handleError(res, err);
+    handleError(err, res);
   }
 }
 
@@ -87,7 +87,7 @@ async function login(req, res) {
 
     res.send(token);
   } catch (err) {
-    handleError(res, err);
+    handleError(err, res);
   }
 }
 

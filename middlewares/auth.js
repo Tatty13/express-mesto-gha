@@ -17,7 +17,7 @@ function auth(req, res, next) {
 
     next();
   } catch (err) {
-    handleError(res, err);
+    handleError(err, res);
   }
 }
 

@@ -8,7 +8,7 @@ async function getCards(_, res) {
     const cards = await Card.find({}).populate(['owner', 'likes']);
     res.send(cards);
   } catch (err) {
-    handleError(res, err);
+    handleError(err, res);
   }
 }
 
@@ -21,7 +21,7 @@ async function createCard(req, res) {
     const card = await newCard.populate('owner');
     res.status(CREATED_201).send(card);
   } catch (err) {
-    handleError(res, err);
+    handleError(err, res);
   }
 }
 
@@ -38,7 +38,7 @@ async function deleteCard(req, res) {
 
     res.send(card);
   } catch (err) {
-    handleError(res, err);
+    handleError(err, res);
   }
 }
 
@@ -58,7 +58,7 @@ async function toogleLike(req, res) {
 
     res.send(card);
   } catch (err) {
-    handleError(res, err);
+    handleError(err, res);
   }
 }
 

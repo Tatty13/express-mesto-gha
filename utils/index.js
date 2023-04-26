@@ -13,12 +13,12 @@ const {
 } = require('./constants');
 
 /**
- * @param {Object} res - Responce
  * @param {Object} err - Error
+ * @param {Object} res - Responce
  * @param {String} errDesc - error description before error message;
  * @returns
  */
-function handleError(res, err, errDesc = 'Произошла ошибка') {
+function handleError(err, res, errDesc = 'Произошла ошибка') {
   if (err instanceof mongooseError.ValidationError) {
     const errMessage = Object.values(err.errors).map((e) => e.message).join('. ');
     const resData = { message: `${errDesc}: ${errMessage}` };
