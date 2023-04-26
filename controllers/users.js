@@ -18,7 +18,7 @@ function getUsers(_, res) {
     .catch((err) => handleError(res, err));
 }
 
-async function getUser(req, res) {
+async function getUserById(req, res) {
   const { id } = req.params;
 
   try {
@@ -93,7 +93,7 @@ async function login(req, res) {
 
 module.exports = {
   getUsers,
-  getUser,
+  getUserById,
   createUser,
   updateUser,
   updateAvatar,
