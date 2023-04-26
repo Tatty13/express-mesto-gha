@@ -1,5 +1,7 @@
 const Card = require('../models/card');
+
 const NotFoundError = require('../errors/not-found-error');
+const ForbiddenError = require('../errors/forbidden-error');
 const { handleError } = require('../utils');
 const { CREATED_201 } = require('../utils/constants');
 
@@ -27,16 +29,17 @@ async function createCard(req, res) {
 
 async function deleteCard(req, res) {
   const { id } = req.params;
+  const userId = req.user._id;
 
   try {
-    const card = await Card.findByIdAndRemove(id).populate([
-      'owner',
-      'likes',
-    ]);
-
+    const card = await Card.findById(id);
     if (!card) throw new NotFoundError('Карточка не найдена');
 
-    res.send(card);
+    if (card.owner._id.toString() !== userId) throw new ForbiddenError('Недостаточно прав для удаления карточки');
+
+    await Card.findByIdAndRemove(id);
+
+    res.send({ message: 'Карточка удалена' });
   } catch (err) {
     handleError(err, res);
   }
