@@ -31,6 +31,16 @@ async function getUserById(req, res) {
   }
 }
 
+async function getUser(req, res) {
+  const { _id } = req.user;
+  try {
+    const user = await User.findById(_id);
+    res.send(user);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
 async function createUser(req, res) {
   const { email, password } = req.body;
 
@@ -94,6 +104,7 @@ async function login(req, res) {
 module.exports = {
   getUsers,
   getUserById,
+  getUser,
   createUser,
   updateUser,
   updateAvatar,
