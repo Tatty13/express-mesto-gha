@@ -56,7 +56,7 @@ function handleError(err, res, errDesc = 'Произошла ошибка') {
  * @param {String} password
  */
 async function findUserByCredentials(email, password) {
-  const user = await this.findOne({ email });
+  const user = await this.findOne({ email }).select('+password');
   if (!user) throw new AuthError('Неправильные почта или пароль');
 
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
