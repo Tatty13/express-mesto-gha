@@ -1,11 +1,13 @@
 const mongooseError = require('mongoose').Error;
 const bcrypt = require('bcryptjs');
+const { JsonWebTokenError } = require('jsonwebtoken');
 
 const CustomError = require('../errors/custom-error');
 const AuthError = require('../errors/auth-error');
 
 const {
   BAD_REQUEST_400,
+  UNAUTHORIZED_401,
   CONFLICT_409,
   INTERNAL_SERVER_ERROR_500,
 } = require('./constants');
@@ -33,6 +35,11 @@ function handleError(res, err, errDesc = 'Произошла ошибка') {
 
   if (err.code === 11000) {
     res.status(CONFLICT_409).send({ message: 'Пользователь с указанным email уже существует' });
+    return;
+  }
+
+  if (err instanceof JsonWebTokenError) {
+    res.status(UNAUTHORIZED_401).send({ message: 'Передан невалидный токен' });
     return;
   }
 
