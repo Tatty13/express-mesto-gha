@@ -11,7 +11,14 @@ const {
   INTERNAL_SERVER_ERROR_500,
 } = require('../utils/constants');
 
-function handleError(err, _, res, next) {
+/**
+ * @param {Object} err - Error
+ * @param {*} req - Request
+ * @param {Object} res - Responce
+ * @param {Function} next
+ * @returns
+ */
+function handleError(err, req, res, next) {
   if (isCelebrateError(err)) {
     const [errData] = err.details.values().next().value.details;
     res.status(BAD_REQUEST_400).send({ message: errData.message });
