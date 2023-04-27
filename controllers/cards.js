@@ -2,19 +2,19 @@ const Card = require('../models/card');
 
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
-const { handleError } = require('../utils');
+
 const { CREATED_201 } = require('../utils/constants');
 
-async function getCards(_, res) {
+async function getCards(_, res, next) {
   try {
     const cards = await Card.find({}).populate(['owner', 'likes']);
     res.send(cards);
   } catch (err) {
-    handleError(err, res);
+    next(err);
   }
 }
 
-async function createCard(req, res) {
+async function createCard(req, res, next) {
   const { name, link } = req.body;
   const { _id } = req.user;
 
@@ -23,11 +23,11 @@ async function createCard(req, res) {
     const card = await newCard.populate('owner');
     res.status(CREATED_201).send(card);
   } catch (err) {
-    handleError(err, res);
+    next(err);
   }
 }
 
-async function deleteCard(req, res) {
+async function deleteCard(req, res, next) {
   const { id } = req.params;
   const userId = req.user._id;
 
@@ -41,12 +41,12 @@ async function deleteCard(req, res) {
 
     res.send({ message: 'Карточка удалена' });
   } catch (err) {
-    handleError(err, res);
+    next(err);
   }
 }
 
 // не уверена, что стоит выносить код снятия/постановки лайка в отдельную функцию
-async function toogleLike(req, res) {
+async function toogleLike(req, res, next) {
   const { id } = req.params;
   const { _id: userId } = req.user;
 
@@ -61,16 +61,16 @@ async function toogleLike(req, res) {
 
     res.send(card);
   } catch (err) {
-    handleError(err, res);
+    next(err);
   }
 }
 
-function putLike(req, res) {
-  toogleLike(req, res);
+function putLike(req, res, next) {
+  toogleLike(req, res, next);
 }
 
-function deleteLike(req, res) {
-  toogleLike(req, res);
+function deleteLike(req, res, next) {
+  toogleLike(req, res, next);
 }
 
 module.exports = {

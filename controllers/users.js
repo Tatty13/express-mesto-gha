@@ -9,16 +9,15 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const ValidationError = require('../errors/validation-error');
 
-const { handleError } = require('../utils');
 const { CREATED_201 } = require('../utils/constants');
 
-function getUsers(_, res) {
+function getUsers(_, res, next) {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => handleError(err, res));
+    .catch(next);
 }
 
-async function getUserById(req, res) {
+async function getUserById(req, res, next) {
   const { id } = req.params;
 
   try {
@@ -27,21 +26,21 @@ async function getUserById(req, res) {
 
     res.send(user);
   } catch (err) {
-    handleError(err, res);
+    next(err);
   }
 }
 
-async function getUser(req, res) {
+async function getUser(req, res, next) {
   const { _id } = req.user;
   try {
     const user = await User.findById(_id);
     res.send(user);
   } catch (err) {
-    handleError(err, res);
+    next(err);
   }
 }
 
-async function createUser(req, res) {
+async function createUser(req, res, next) {
   const { email, password } = req.body;
 
   try {
@@ -52,7 +51,7 @@ async function createUser(req, res) {
 
     res.status(CREATED_201).send({ user });
   } catch (err) {
-    handleError(err, res);
+    next(err);
   }
 }
 
@@ -61,7 +60,7 @@ async function createUser(req, res) {
  * @param {Object} res - Responce
  * @param {Object} userInfo - user info to be updated
  */
-async function updateUserInfo(req, res, userInfo) {
+async function updateUserInfo(req, res, next, userInfo) {
   const { _id } = req.user;
   try {
     const user = await User.findByIdAndUpdate(
@@ -74,21 +73,21 @@ async function updateUserInfo(req, res, userInfo) {
 
     res.send(user);
   } catch (err) {
-    handleError(err, res);
+    next(err);
   }
 }
 
-function updateUser(req, res) {
+function updateUser(req, res, next) {
   const { name, about } = req.body;
-  updateUserInfo(req, res, { name, about });
+  updateUserInfo(req, res, next, { name, about });
 }
 
-function updateAvatar(req, res) {
+function updateAvatar(req, res, next) {
   const { avatar } = req.body;
-  updateUserInfo(req, res, { avatar });
+  updateUserInfo(req, res, next, { avatar });
 }
 
-async function login(req, res) {
+async function login(req, res, next) {
   const { email, password } = req.body;
   try {
     const { _id } = await User.findUserByCredentials(email, password);
@@ -97,7 +96,7 @@ async function login(req, res) {
 
     res.send(token);
   } catch (err) {
-    handleError(err, res);
+    next(err);
   }
 }
 
