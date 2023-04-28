@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { errors } = require('celebrate');
 
 const usersRouter = require('./users');
 const cardsRouter = require('./cards');
@@ -18,6 +19,7 @@ router.use('/cards', auth, cardsRouter);
 router.use('*', (_, res) => {
   res.status(NOT_FOUND_404).send({ message: 'page not found' });
 });
+router.use(errors());
 router.use(handleError);
 
 module.exports = router;
