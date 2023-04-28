@@ -7,19 +7,19 @@ const { urlPattern } = require('../utils/constants');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    default: 'Аноним',
+    default: 'Жак-Ив Кусто',
     minlength: [2, 'Длина имени не должна быть короче двух символов'],
     maxlength: [30, 'Длина имени не должна превышать 30 символов'],
   },
   about: {
     type: String,
-    default: 'Остаюсь загадкой',
+    default: 'Исследователь',
     minlength: [2, 'Длина описания не должна быть короче двух символов'],
     maxlength: [30, 'Длина описания не должна превышать 30 символов'],
   },
   avatar: {
     type: String,
-    default: 'https://raw.githubusercontent.com/Tatty13/imgs-for-mesto-project/main/avatar.png',
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator(value) {
         return urlPattern.test(value);
