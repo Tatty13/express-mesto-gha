@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+
 const { findUserByCredentials } = require('../utils');
+const { urlPattern } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -17,6 +19,12 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://raw.githubusercontent.com/Tatty13/imgs-for-mesto-project/main/avatar.png',
+    validate: {
+      validator(value) {
+        return urlPattern.test(value);
+      },
+      message: 'Ссылка не валидна',
+    },
   },
   email: {
     type: String,
