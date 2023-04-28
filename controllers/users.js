@@ -92,7 +92,7 @@ async function login(req, res, next) {
 
     const token = jwt.sign({ _id }, JWT_SECRET, { expiresIn: '7d' });
 
-    res.send(token);
+    res.send({ token });
   } catch (err) {
     next(err);
   }
