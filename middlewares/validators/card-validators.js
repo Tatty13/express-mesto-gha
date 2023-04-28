@@ -4,8 +4,8 @@ const { urlPattern } = require('../../utils/constants');
 
 const validateCardData = celebrate({
   body: Joi.object({
-    name: Joi.string().min(2).max(30),
-    link: Joi.string().pattern(urlPattern),
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().pattern(urlPattern).required(),
   }),
 });
 
