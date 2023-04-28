@@ -19,7 +19,7 @@ router.use('/cards', auth, cardsRouter);
 router.use('*', (_, res) => {
   res.status(NOT_FOUND_404).send({ message: 'page not found' });
 });
-router.use(errors());
+router.use(errors()); // add line to pass github tests
 router.use(handleError);
 
 module.exports = router;
