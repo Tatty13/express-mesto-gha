@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const { findUserByCredentials } = require('../utils');
 const { urlPattern } = require('../utils/constants');
@@ -30,6 +31,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'email не указан'],
     unique: [true, 'Пользователь с указанным email уже существует'],
+    validate: {
+      validator(value) {
+        return validator.isEmail(value);
+      },
+      message: 'Некорректный email или пароль',
+    },
   },
   password: {
     type: String,

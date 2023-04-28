@@ -1,4 +1,3 @@
-const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -7,7 +6,6 @@ const { JWT_SECRET } = process.env;
 const User = require('../models/user');
 
 const NotFoundError = require('../errors/not-found-error');
-const ValidationError = require('../errors/validation-error');
 
 const { CREATED_201 } = require('../utils/constants');
 
@@ -41,11 +39,9 @@ async function getUser(req, res, next) {
 }
 
 async function createUser(req, res, next) {
-  const { email, password } = req.body;
+  const { password } = req.body;
 
   try {
-    if (!validator.isEmail(email)) { throw new ValidationError('Некорректный email или пароль'); }
-
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({ ...req.body, password: hash });
 
