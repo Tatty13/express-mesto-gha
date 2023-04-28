@@ -11,6 +11,7 @@ const {
 } = httpConstants;
 
 const urlPattern = /https?:\/\/?[^\s"]+$/;
+const jwtSecter = '8e141d9f4d0c469ab5b5f922c1b100ea';
 
 module.exports = {
   CREATED_201,
@@ -21,4 +22,5 @@ module.exports = {
   INTERNAL_SERVER_ERROR_500,
   CONFLICT_409,
   urlPattern,
+  jwtSecter,
 };
