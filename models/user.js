@@ -4,6 +4,9 @@ const validator = require('validator');
 const { findUserByCredentials } = require('../utils');
 const { urlPattern } = require('../utils/constants');
 
+mongoose.set('toObject', { useProjection: true });
+mongoose.set('toJSON', { useProjection: true });
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
