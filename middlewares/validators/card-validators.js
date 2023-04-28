@@ -1,9 +1,11 @@
 const { celebrate, Joi } = require('celebrate');
 
+const { urlPattern } = require('../../utils/constants');
+
 const validateCardData = celebrate({
   body: Joi.object({
     name: Joi.string().min(2).max(30),
-    link: Joi.string().uri(),
+    link: Joi.string().pattern(urlPattern),
   }),
 });
 
