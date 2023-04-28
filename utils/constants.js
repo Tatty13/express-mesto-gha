@@ -10,6 +10,8 @@ const {
   HTTP_STATUS_INTERNAL_SERVER_ERROR: INTERNAL_SERVER_ERROR_500,
 } = httpConstants;
 
+const urlPattern = /https?:\/\/?[^\s"]+$/;
+
 module.exports = {
   CREATED_201,
   BAD_REQUEST_400,
@@ -18,4 +20,5 @@ module.exports = {
   NOT_FOUND_404,
   INTERNAL_SERVER_ERROR_500,
   CONFLICT_409,
+  urlPattern,
 };
