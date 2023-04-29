@@ -11,7 +11,7 @@ const validateUserId = celebrate({
 const validateUserCredential = celebrate({
   body: Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().min(6).required(),
+    password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(urlPattern),
