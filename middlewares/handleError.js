@@ -1,5 +1,5 @@
 const mongooseError = require('mongoose').Error;
-const { isCelebrateError } = require('celebrate');
+// const { isCelebrateError } = require('celebrate');
 
 const CustomError = require('../errors/custom-error');
 
@@ -17,11 +17,12 @@ const {
  * @returns
  */
 function handleError(err, req, res, next) {
-  if (isCelebrateError(err)) {
-    const [errData] = err.details.values().next().value.details;
-    res.status(BAD_REQUEST_400).send({ message: errData.message });
-    return;
-  }
+  // не удаляю, т.к. планирую использовать этот обработчик вместо стандартного errors()
+  // if (isCelebrateError(err)) {
+  //   const [errData] = err.details.values().next().value.details;
+  //   res.status(BAD_REQUEST_400).send({ message: errData.message });
+  //   return;
+  // }
 
   if (err instanceof mongooseError.ValidationError) {
     const errMessage = Object.values(err.errors).map((e) => e.message).join('. ');
