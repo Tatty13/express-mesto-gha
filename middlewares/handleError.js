@@ -49,14 +49,12 @@ function handleError(err, req, res, next) {
     return;
   }
 
-  const resMessage = { message: err.message };
-
   if (err instanceof CustomError) {
-    res.status(err.statusCode).send(resMessage);
+    res.status(err.statusCode).send({ message: err.message });
     return;
   }
 
-  res.status(INTERNAL_SERVER_ERROR_500).send(resMessage);
+  res.status(INTERNAL_SERVER_ERROR_500).send({ message: 'На сервере произошла ошибка' });
   next();
 }
 
