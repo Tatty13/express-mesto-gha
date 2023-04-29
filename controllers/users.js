@@ -92,7 +92,7 @@ async function login(req, res, next) {
 
     const token = jwt.sign({ _id }, JWT_SECRET, { expiresIn: '7d' });
 
-    res.send({ token });
+    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 * 24 * 7 }).send('Авторизация прошла успешно');
   } catch (err) {
     next(err);
   }
