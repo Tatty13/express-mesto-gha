@@ -1,14 +1,10 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
-const { jwtSecter } = require('../utils/constants');
-
-const { JWT_SECRET = jwtSecter } = process.env;
 
 const User = require('../models/user');
 
 const NotFoundError = require('../errors/not-found-error');
 
+const { generateToken } = require('../utils/token');
 const { CREATED_201 } = require('../utils/constants');
 
 function getUsers(_, res, next) {
@@ -89,8 +85,7 @@ async function login(req, res, next) {
   const { email, password } = req.body;
   try {
     const { _id } = await User.findUserByCredentials(email, password);
-
-    const token = jwt.sign({ _id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = generateToken({ _id });
 
     res
       .cookie('token', token, {

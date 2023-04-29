@@ -1,10 +1,5 @@
-const jwt = require('jsonwebtoken');
-
-const { jwtSecter } = require('../utils/constants');
-
-const { JWT_SECRET = jwtSecter } = process.env;
-
 const AuthError = require('../errors/auth-error');
+const { verifyToken } = require('../utils/token');
 
 function auth(req, _, next) {
   const { token } = req.cookies;
@@ -12,7 +7,7 @@ function auth(req, _, next) {
   try {
     if (!token) { throw new AuthError('Требуется авторизация'); }
 
-    const payload = jwt.verify(token, JWT_SECRET);
+    const payload = verifyToken(token);
     req.user = payload;
 
     next();
