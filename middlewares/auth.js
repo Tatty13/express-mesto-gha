@@ -12,7 +12,7 @@ function auth(req, _, next) {
 
     next();
   } catch (err) {
-    next(err);
+    next(new AuthError('Передан невалидный токен'));
   }
 }
 
