@@ -6,6 +6,7 @@ const NotFoundError = require('../errors/not-found-error');
 
 const { generateToken } = require('../utils/token');
 const { CREATED_201 } = require('../utils/constants');
+const { cookieTokenOpt } = require('../utils/cookie-options');
 
 function getUsers(_, res, next) {
   User.find({})
@@ -88,11 +89,7 @@ async function login(req, res, next) {
     const token = generateToken({ _id });
 
     res
-      .cookie('token', token, {
-        httpOnly: true,
-        sameSite: true,
-        maxAge: 3600000 * 24 * 7,
-      })
+      .cookie('token', token, cookieTokenOpt)
       .send({ message: 'Авторизация прошла успешно' });
   } catch (err) {
     next(err);
