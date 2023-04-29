@@ -45,7 +45,6 @@ async function deleteCard(req, res, next) {
   }
 }
 
-// не уверена, что стоит выносить код снятия/постановки лайка в отдельную функцию
 async function toogleLike(req, res, next) {
   const { id } = req.params;
   const { _id: userId } = req.user;
