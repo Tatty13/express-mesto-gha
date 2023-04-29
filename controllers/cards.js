@@ -37,7 +37,7 @@ async function deleteCard(req, res, next) {
 
     if (card.owner._id.toString() !== userId) throw new ForbiddenError('Недостаточно прав для удаления карточки');
 
-    await Card.findByIdAndRemove(id);
+    await card.deleteOne();
 
     res.send({ message: 'Карточка удалена' });
   } catch (err) {
