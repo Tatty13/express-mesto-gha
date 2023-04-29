@@ -6,13 +6,11 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 
 const router = require('./routes');
-const { limiter } = require('./utils/constants');
-
-const { PORT = 3000 } = process.env;
+const { PORT, BD_URL, limiter } = require('./utils/config');
 
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
+mongoose.connect(BD_URL, {
   useNewUrlParser: true,
 });
 

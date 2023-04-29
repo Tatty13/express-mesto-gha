@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { jwtSecter } = require('./constants');
-
-const { JWT_SECRET = jwtSecter } = process.env;
+const { JWT_SECRET } = require('./config');
 
 /**
  * @typedef {(String | Object | Buffer)} Payload
