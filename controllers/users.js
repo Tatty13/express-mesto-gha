@@ -43,6 +43,9 @@ async function createUser(req, res, next) {
     const hash = await generateHash(password);
     const user = await User.create({ ...req.body, password: hash });
 
+    // к сожалению, не смогла найти, где именно на клиента возвращается пароль
+    // т.к. вывод в консоль и создание пользователя через постман отображают данные без пароля
+    // скрытие пароля настроивалось на уровне схемы
     res.status(CREATED_201).send({ user });
   } catch (err) {
     next(err);
