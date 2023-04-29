@@ -1,10 +1,9 @@
-const bcrypt = require('bcryptjs');
-
 const User = require('../models/user');
 
 const NotFoundError = require('../errors/not-found-error');
 
 const { generateToken } = require('../utils/token');
+const { generateHash } = require('../utils/hash');
 const { CREATED_201 } = require('../utils/constants');
 const { cookieTokenOpt } = require('../utils/cookie-options');
 
@@ -41,7 +40,7 @@ async function createUser(req, res, next) {
   const { password } = req.body;
 
   try {
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await generateHash(password);
     const user = await User.create({ ...req.body, password: hash });
 
     res.status(CREATED_201).send({ user });
