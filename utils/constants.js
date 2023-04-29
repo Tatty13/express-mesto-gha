@@ -1,4 +1,5 @@
 const httpConstants = require('http2').constants;
+const rateLimit = require('express-rate-limit');
 
 const {
   HTTP_STATUS_CREATED: CREATED_201,
@@ -13,6 +14,13 @@ const {
 const urlPattern = /https?:\/\/?[^\s"]+$/;
 const jwtSecter = '8e141d9f4d0c469ab5b5f922c1b100ea';
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
 module.exports = {
   CREATED_201,
   BAD_REQUEST_400,
@@ -23,4 +31,5 @@ module.exports = {
   CONFLICT_409,
   urlPattern,
   jwtSecter,
+  limiter,
 };
