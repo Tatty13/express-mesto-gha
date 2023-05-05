@@ -1,4 +1,4 @@
-const httpConstants = require('http2').constants;
+const httpConstants = require("http2").constants;
 
 const {
   HTTP_STATUS_CREATED: CREATED_201,
@@ -10,7 +10,7 @@ const {
   HTTP_STATUS_INTERNAL_SERVER_ERROR: INTERNAL_SERVER_ERROR_500,
 } = httpConstants;
 
-const urlPattern = /https?:\/\/?[^\s"]+$/;
+const urlPattern = /https?:\/\/[^\s"]+\.[^\s"]+$/;
 
 module.exports = {
   CREATED_201,
