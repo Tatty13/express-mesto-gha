@@ -1,4 +1,4 @@
-const httpConstants = require("http2").constants;
+const httpConstants = require('http2').constants;
 
 const {
   HTTP_STATUS_CREATED: CREATED_201,
