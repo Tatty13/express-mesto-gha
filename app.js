@@ -9,6 +9,7 @@ const { errors } = require('celebrate');
 const router = require('./routes');
 const { PORT, BD_URL, limiter } = require('./utils/config');
 const handleError = require('./middlewares/handleError');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
@@ -22,7 +23,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use(requestLogger);
 app.use(router);
+app.use(errorLogger);
 
 /**
  * @todo remove line: router.use(errors())
